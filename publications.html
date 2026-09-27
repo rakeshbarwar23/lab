@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="flat-links" content="1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Publications — Nayak Lab · IIT Delhi</title>
+<meta name="description" content="Peer-reviewed publications from the Nayak Lab on the energetics, allostery and gating of ion channels and receptors.">
+<link rel="icon" type="image/png" href="assets/logos/tkn-favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&amp;family=Geist+Mono:wght@400;500&amp;family=Newsreader:ital,opsz,wght@1,6..72,400&amp;display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#070c16;-webkit-font-smoothing:antialiased;}
+:focus-visible{outline:2px solid #f1d49a;outline-offset:3px;}
+::selection{background:#e0a53a;color:#070c16;}
+a{text-decoration:none;color:inherit;}
+a:hover{color:inherit;}
+img{max-width:100%;}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms !important;}}
+</style>
+<script src="./content.js"></script>
+<script src="./home-fx.js"></script>
+<script src="./trace-engine.js"></script>
+<script src="./figs-pubs.js"></script>
+<script src="./flatlinks.js"></script>
+</helmet>
+<div style="font-family:'Geist',sans-serif;color:#e8ecf3;background:#070c16;min-height:100vh;overflow-x:clip;">
+  <dc-import name="SiteNav" active="publications" hint-size="100%,64px" style="position:sticky;top:0;z-index:200;"></dc-import>
+
+  <section id="main" style="position:relative;overflow:hidden;border-bottom:1px solid rgba(255,255,255,0.07);">
+    <canvas data-fig="publications" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
+    <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,#070c16 30%,rgba(7,12,22,0.6) 48%,rgba(7,12,22,0) 58%),linear-gradient(180deg,transparent 80%,#070c16);"></div>
+    <div style="position:absolute;right:clamp(20px,5vw,40px);bottom:16px;font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:#7d889c;pointer-events:none;">Simulated · open-time distribution, two exponential components</div>
+    <div style="position:relative;max-width:1360px;margin:0 auto;padding:clamp(72px,10vw,136px) clamp(20px,5vw,40px) clamp(56px,7vw,88px);">
+      <div style="font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:0.2em;color:#e6b667;text-transform:uppercase;margin-bottom:22px;">Publications</div>
+      <h1 style="font-weight:500;font-size:clamp(38px,6vw,84px);line-height:1;letter-spacing:-0.04em;max-width:1000px;text-wrap:balance;margin-bottom:26px;">Peer-reviewed <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#f1d49a;letter-spacing:-0.02em;">publications</span></h1>
+      <p style="font-size:clamp(16px,1.5vw,18px);line-height:1.65;color:#aab3c3;max-width:600px;font-weight:300;">A selection of the group's work on the energetics, allostery and gating of ion channels and receptors. Click any entry for the journal version.</p>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:0 auto;padding:clamp(56px,7vw,96px) clamp(20px,5vw,40px) 0;">
+    <sc-for list="{{ groups }}" as="grp" hint-placeholder-count="4">
+      <div data-reveal="" style="display:flex;flex-wrap:wrap;gap:12px 40px;padding:28px 0 36px;border-top:1px solid rgba(255,255,255,0.1);">
+        <div style="flex:0 0 200px;">
+          <div style="font-weight:500;font-size:clamp(32px,4vw,52px);letter-spacing:-0.04em;line-height:1;color:#f1d49a;">{{ grp.year }}</div>
+          <div style="font-family:'Geist Mono',monospace;font-size:11.5px;letter-spacing:0.1em;text-transform:uppercase;color:#7d889c;margin-top:10px;">{{ grp.count }}</div>
+        </div>
+        <div style="flex:1 1 520px;min-width:0;display:flex;flex-direction:column;">
+          <sc-for list="{{ grp.items }}" as="p" hint-placeholder-count="2">
+            <a href="{{ p.url }}" target="_blank" rel="noopener" style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px clamp(12px,2vw,32px);align-items:flex-start;padding:20px clamp(12px,2vw,20px);border-radius:14px;transition:background .2s;" style-hover="background:#0f1726;">
+              <div style="flex:1 1 360px;min-width:0;">
+                <div style="font-size:clamp(17px,1.8vw,20px);font-weight:500;letter-spacing:-0.012em;line-height:1.35;margin-bottom:8px;text-wrap:pretty;">{{ p.title }}</div>
+                <div style="font-size:13.5px;color:#8792a6;line-height:1.5;">{{ p.authors }}</div>
+              </div>
+              <div style="font-family:'Geist Mono',monospace;font-size:12px;color:#070c16;background:#f1d49a;padding:6px 12px;border-radius:999px;white-space:nowrap;">{{ p.venue }} ↗</div>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+
+    <div data-reveal="" style="display:flex;flex-wrap:wrap;gap:12px 40px;padding:28px 0 36px;border-top:1px solid rgba(255,255,255,0.1);">
+      <div style="flex:0 0 200px;">
+        <div style="font-family:'Newsreader',serif;font-style:italic;font-size:clamp(26px,3vw,36px);line-height:1.1;color:#f1d49a;">Book chapter &amp; under review</div>
+      </div>
+      <div style="flex:1 1 520px;min-width:0;">
+        <sc-for list="{{ other }}" as="p" hint-placeholder-count="2">
+          <div style="padding:20px clamp(12px,2vw,20px);">
+            <div style="font-size:clamp(17px,1.8vw,20px);font-weight:500;letter-spacing:-0.012em;line-height:1.35;margin-bottom:8px;">{{ p.title }}</div>
+            <div style="font-size:13.5px;color:#8792a6;line-height:1.5;">{{ p.authors }} · <span style="font-family:'Geist Mono',monospace;color:#e6b667;">{{ p.venue }}</span></div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:36px;">
+      <a href="assets/docs/tapan-nayak-biosketch.pdf" target="_blank" style="display:inline-flex;align-items:center;gap:10px;font-size:14.5px;font-weight:500;color:#fff;border:1px solid rgba(255,255,255,0.18);padding:14px 26px;border-radius:999px;transition:background .18s;" style-hover="background:rgba(255,255,255,0.07);">Download full biosketch (PDF) ↓</a>
+    </div>
+  </section>
+
+  <div style="height:clamp(80px,10vw,128px);"></div>
+  <dc-import name="SiteFooter" hint-size="100%,340px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() { const go = () => { if (!window.LAB_CONTENT) { this._t = setTimeout(go, 40); return; } this.forceUpdate(); }; go(); }
+  componentWillUnmount() { clearTimeout(this._t); }
+  renderVals() {
+    const C = window.LAB_CONTENT || {};
+    const order = [], map = {};
+    (C.publications || []).forEach(p => { if (!map[p.year]) { map[p.year] = []; order.push(p.year); } map[p.year].push(p); });
+    const yr = v => parseInt((String(v || '').match(/\d{4}/) || ['0'])[0], 10);
+    order.sort((a, b) => yr(b) - yr(a));
+    return {
+      groups: order.map(y => ({ year: y, items: map[y], count: map[y].length + (map[y].length === 1 ? ' paper' : ' papers') })),
+      other: C.publicationsOther || [],
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="flat-links" content="1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Teaching — Nayak Lab · IIT Delhi</title>
+<meta name="description" content="Courses taught at the Kusuma School of Biological Sciences, IIT Delhi.">
+<link rel="icon" type="image/png" href="assets/logos/tkn-favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&amp;family=Geist+Mono:wght@400;500&amp;family=Newsreader:ital,opsz,wght@1,6..72,400&amp;display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#070c16;-webkit-font-smoothing:antialiased;}
+:focus-visible{outline:2px solid #f1d49a;outline-offset:3px;}
+::selection{background:#e0a53a;color:#070c16;}
+a{text-decoration:none;color:inherit;}
+a:hover{color:inherit;}
+img{max-width:100%;}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms !important;}}
+</style>
+<script src="./content.js"></script>
+<script src="./home-fx.js"></script>
+<script src="./trace-engine.js"></script>
+<script src="./figs-teaching.js"></script>
+<script src="./flatlinks.js"></script>
+</helmet>
+<div style="font-family:'Geist',sans-serif;color:#e8ecf3;background:#070c16;min-height:100vh;overflow-x:clip;">
+  <dc-import name="SiteNav" active="teaching" hint-size="100%,64px" style="position:sticky;top:0;z-index:200;"></dc-import>
+
+  <section id="main" style="position:relative;overflow:hidden;border-bottom:1px solid rgba(255,255,255,0.07);">
+    <canvas data-fig="teaching" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
+    <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,#070c16 30%,rgba(7,12,22,0.6) 48%,rgba(7,12,22,0) 58%),linear-gradient(180deg,transparent 80%,#070c16);"></div>
+    <div style="position:absolute;right:clamp(20px,5vw,40px);bottom:16px;font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:#7d889c;pointer-events:none;">Simulated · Hodgkin–Huxley model, squid axon parameters at 6.3 °C</div>
+    <div style="position:relative;max-width:1360px;margin:0 auto;padding:clamp(72px,10vw,136px) clamp(20px,5vw,40px) clamp(56px,7vw,88px);">
+      <div style="font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:0.2em;color:#e6b667;text-transform:uppercase;margin-bottom:22px;">Teaching</div>
+      <h1 style="font-weight:500;font-size:clamp(38px,6vw,84px);line-height:1;letter-spacing:-0.04em;margin-bottom:26px;"><span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#f1d49a;letter-spacing:-0.02em;">Courses</span></h1>
+      <p style="font-size:clamp(16px,1.5vw,18px);line-height:1.65;color:#aab3c3;max-width:620px;font-weight:300;">Undergraduate and graduate courses at the Kusuma School of Biological Sciences, spanning the foundations of biology to membrane biophysics and electrophysiology.</p>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:0 auto;padding:clamp(56px,7vw,96px) clamp(20px,5vw,40px) 0;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px;">
+      <sc-for list="{{ courses }}" as="c" hint-placeholder-count="4">
+        <article data-reveal="" data-reveal-delay="{{ c.delay }}" style="background:#0d1422;border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:12px;display:flex;flex-direction:column;transition:border-color .25s,transform .3s cubic-bezier(.32,.72,0,1),background .25s;" style-hover="border-color:rgba(241,212,154,0.45);transform:translateY(-6px);background:#101a2c;">
+          <div style="aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:#141e30;">
+            <img loading="lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ c.img }}" alt="{{ c.title }}" style="width:100%;height:100%;object-fit:cover;display:block;">
+          </div>
+          <div style="padding:22px 12px 14px;display:flex;flex-direction:column;gap:10px;flex:1;">
+            <div style="font-family:'Geist Mono',monospace;font-size:12.5px;color:#070c16;background:#f1d49a;padding:4px 10px;border-radius:999px;align-self:flex-start;">{{ c.code }}</div>
+            <h2 style="font-weight:500;font-size:21px;letter-spacing:-0.02em;line-height:1.2;">{{ c.title }}</h2>
+            <p style="font-size:14px;line-height:1.6;color:#8792a6;font-weight:300;flex:1;">{{ c.desc }}</p>
+            <div style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#7d889c;padding-top:12px;border-top:1px solid rgba(255,255,255,0.07);">{{ c.level }}</div>
+          </div>
+        </article>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:clamp(80px,10vw,128px) auto 0;padding:0 clamp(20px,5vw,40px);">
+    <div data-reveal="" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:28px 64px;border-top:1px solid rgba(255,255,255,0.1);padding-top:32px;">
+      <div>
+        <div style="font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:0.2em;color:#e6b667;text-transform:uppercase;margin-bottom:18px;">In the classroom</div>
+        <h2 style="font-weight:500;font-size:clamp(30px,4vw,52px);line-height:1.02;letter-spacing:-0.035em;text-wrap:balance;">Quantitative biology, taught from <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#f1d49a;">first principles</span>.</h2>
+      </div>
+      <div style="font-size:16px;line-height:1.75;color:#8792a6;font-weight:300;display:flex;flex-direction:column;gap:16px;">
+        <p>Courses emphasise the physical logic behind biological signalling — how thermodynamics, kinetics and structure together explain what a channel or receptor does.</p>
+        <p>Students learn to read single-channel records, build kinetic models, and connect molecular measurements to physiology. Project rotations bring undergraduates and Masters students directly to the patch-clamp rig.</p>
+      </div>
+    </div>
+  </section>
+
+  <div style="height:clamp(80px,10vw,128px);"></div>
+  <dc-import name="SiteFooter" hint-size="100%,340px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const C = [
+      { code: 'SBL100', title: 'Foundations of Biology', level: 'Undergraduate core course', img: 'assets/courses/SBL100.jpg', desc: 'A first-year introduction to the molecules, cells and systems of life — from biochemistry and genetics to physiology and evolution — building the vocabulary for quantitative biology.' },
+      { code: 'SBL723', title: 'Ion Channels & Electrophysiology', level: 'Graduate elective', img: 'assets/courses/SBL723.jpg', desc: 'Membrane excitability and the biophysics of ion channels, taught alongside the patch-clamp techniques used to record single-channel and whole-cell currents.' },
+      { code: 'SBV887', title: 'Biophysical Methods', level: 'Graduate / PhD course', img: 'assets/courses/SBV887.jpg', desc: 'A hands-on survey of the experimental toolkit of modern biophysics — spectroscopy, electrophysiology, microscopy and structural methods — and how to read their data.' },
+      { code: 'SBV892', title: 'Membrane Biophysics', level: 'Graduate / PhD course', img: 'assets/courses/SBV892.jpg', desc: 'The physics of biological membranes: lipid bilayers, passive and active transport, electrochemical gradients, and the channel and transporter proteins that gate them.' },
+    ];
+    return { courses: C.map((c, i) => ({ ...c, delay: i * 90 })) };
+  }
+}
+</script>
+</body>
+</html>

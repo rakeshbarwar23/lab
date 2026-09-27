@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="flat-links" content="1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Research — Nayak Lab · IIT Delhi</title>
+<meta name="description" content="Seven research themes: ligand-binding energetics, allostery, allosteric therapeutics, neuropathic pain, synaptic maturation, GPCRs and intracellular channels.">
+<link rel="icon" type="image/png" href="assets/logos/tkn-favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&amp;family=Geist+Mono:wght@400;500&amp;family=Newsreader:ital,opsz,wght@1,6..72,400&amp;display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#070c16;-webkit-font-smoothing:antialiased;}
+:focus-visible{outline:2px solid #f1d49a;outline-offset:3px;}
+::selection{background:#e0a53a;color:#070c16;}
+a{text-decoration:none;color:inherit;}
+a:hover{color:inherit;}
+img{max-width:100%;}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms !important;}}
+</style>
+<script src="./content.js"></script>
+<script src="./home-fx.js"></script>
+<script src="./trace-engine.js"></script>
+<script src="./figs-cards.js"></script>
+<script src="./figs-research.js"></script>
+<script src="./flatlinks.js"></script>
+</helmet>
+<div style="font-family:'Geist',sans-serif;color:#e8ecf3;background:#070c16;min-height:100vh;overflow-x:clip;">
+  <dc-import name="SiteNav" active="research" hint-size="100%,64px" style="position:sticky;top:0;z-index:200;"></dc-import>
+
+  <section id="main" style="position:relative;overflow:hidden;border-bottom:1px solid rgba(255,255,255,0.07);">
+    <canvas data-fig="research" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
+    <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,#070c16 30%,rgba(7,12,22,0.6) 48%,rgba(7,12,22,0) 58%),linear-gradient(180deg,transparent 80%,#070c16);"></div>
+    <div style="position:absolute;right:clamp(20px,5vw,40px);bottom:16px;font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:#7d889c;pointer-events:none;">Simulated · Φ-values map the sequence of gating motions</div>
+    <div style="position:relative;max-width:1360px;margin:0 auto;padding:clamp(72px,10vw,136px) clamp(20px,5vw,40px) clamp(56px,7vw,88px);">
+      <div style="font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:0.2em;color:#e6b667;text-transform:uppercase;margin-bottom:22px;">Research</div>
+      <h1 style="font-weight:500;font-size:clamp(38px,6vw,84px);line-height:1;letter-spacing:-0.04em;max-width:1000px;text-wrap:balance;margin-bottom:26px;">From single-channel currents to the <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#f1d49a;letter-spacing:-0.02em;">energetics</span> of receptor gating.</h1>
+      <p style="font-size:clamp(16px,1.5vw,18px);line-height:1.65;color:#aab3c3;max-width:620px;font-weight:300;">Seven interlinked themes span our work, from atomic-scale ligand binding to circuit-level pain signalling — all anchored in quantitative, single-molecule measurement.</p>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:0 auto;padding:clamp(56px,7vw,96px) clamp(20px,5vw,40px) 0;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px;">
+      <sc-for list="{{ research }}" as="r" hint-placeholder-count="7">
+        <article data-reveal="" data-reveal-delay="{{ r.delay }}" style="background:#0d1422;border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:12px;display:flex;flex-direction:column;transition:border-color .25s,transform .3s cubic-bezier(.32,.72,0,1),background .25s;" style-hover="border-color:rgba(241,212,154,0.45);transform:translateY(-6px);background:#101a2c;">
+          <div style="aspect-ratio:16/10;background:#fff;border-radius:12px;padding:12px;overflow:hidden;">
+            <img loading="lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ r.img }}" alt="{{ r.title }}" style="width:100%;height:100%;object-fit:contain;display:block;">
+          </div>
+          <div style="position:relative;height:88px;margin:10px 0 0;border-radius:12px;background:#0a101c;border:1px solid rgba(255,255,255,0.05);overflow:hidden;">
+            <canvas data-fig="{{ r.fig }}" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
+          </div>
+          <div style="font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:0.06em;color:#7d889c;padding:8px 4px 0;">{{ r.cap }}</div>
+          <div style="padding:22px 14px 16px;display:flex;flex-direction:column;gap:10px;flex:1;">
+            <div style="display:flex;justify-content:space-between;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#7d889c;"><span style="color:#e6b667;">{{ r.tag }}</span><span>{{ r.num }} / 07</span></div>
+            <h2 style="font-weight:500;font-size:23px;letter-spacing:-0.02em;line-height:1.15;">{{ r.title }}</h2>
+            <p style="font-size:14.5px;line-height:1.6;color:#8792a6;font-weight:300;">{{ r.blurb }}</p>
+          </div>
+        </article>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:clamp(80px,10vw,128px) auto 0;padding:0 clamp(20px,5vw,40px);">
+    <div data-reveal="" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:24px 64px;align-items:end;margin-bottom:clamp(32px,4vw,48px);">
+      <h2 style="font-weight:500;font-size:clamp(32px,4.4vw,60px);line-height:1;letter-spacing:-0.035em;">Watching <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#f1d49a;">one molecule</span> work.</h2>
+      <p style="font-size:16px;line-height:1.7;color:#8792a6;font-weight:300;max-width:560px;">Single-channel patch-clamp recordings resolve the opening and closing of individual ion channels with microsecond precision. By combining electrophysiology with mutagenesis, structural modelling and molecular dynamics, we measure the free-energy changes that drive receptor activation.</p>
+    </div>
+    <div data-reveal="" style="border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));">
+      <sc-for list="{{ methods }}" as="m" hint-placeholder-count="4">
+        <div style="padding:clamp(24px,3vw,36px) clamp(16px,2vw,28px);border-right:1px solid rgba(255,255,255,0.07);display:flex;flex-direction:column;gap:12px;transition:background .25s;" style-hover="background:rgba(241,212,154,0.04);">
+          <div style="font-family:'Geist Mono',monospace;font-size:12px;color:#e6b667;">{{ m.n }}</div>
+          <div style="font-weight:500;font-size:19px;letter-spacing:-0.015em;">{{ m.title }}</div>
+          <div style="font-size:14px;color:#8792a6;line-height:1.55;font-weight:300;">{{ m.desc }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:clamp(80px,10vw,128px) auto 0;padding:0 clamp(20px,5vw,40px);">
+    <div data-reveal="" style="border-radius:24px;border:1px solid rgba(241,212,154,0.25);background:radial-gradient(80% 120% at 100% 0%, rgba(224,165,58,0.16), transparent 60%),#0b1220;padding:clamp(32px,5vw,64px);display:flex;justify-content:space-between;align-items:center;gap:28px;flex-wrap:wrap;">
+      <div>
+        <h3 style="font-weight:500;font-size:clamp(26px,3vw,38px);letter-spacing:-0.03em;margin-bottom:10px;">Want the full picture?</h3>
+        <p style="font-size:15.5px;color:#aab3c3;font-weight:300;">Browse our peer-reviewed publications or get in touch about joining the lab.</p>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <a href="Publications.dc.html" style="font-size:14.5px;font-weight:500;color:#fff;border:1px solid rgba(255,255,255,0.18);padding:14px 26px;border-radius:999px;transition:background .18s;" style-hover="background:rgba(255,255,255,0.07);">Publications →</a>
+        <a href="Join.dc.html" style="font-size:14.5px;font-weight:500;color:#070c16;background:#f1d49a;padding:14px 26px;border-radius:999px;transition:transform .18s,box-shadow .18s;" style-hover="transform:translateY(-2px);box-shadow:0 0 0 6px rgba(241,212,154,0.14);">Join us →</a>
+      </div>
+    </div>
+  </section>
+
+  <div style="height:clamp(80px,10vw,128px);"></div>
+  <dc-import name="SiteFooter" hint-size="100%,340px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const R = [
+      { img: 'assets/research/ligand-binding.jpg', tag: 'Energetics', title: 'Ligand-Binding Energetics', blurb: 'Quantifying how agonist binding energy is converted into receptor conformational change at single-channel resolution, and how partial agonists and mutations reshape the activation landscape.' },
+      { img: 'assets/research/allosteric-communication.jpg', tag: 'Allostery', title: 'Allosteric Communication', blurb: 'How conformational signals propagate across receptor domains to couple ligand binding at one site to channel gating at another, often tens of ångströms away.' },
+      { img: 'assets/research/allosteric-therapeutics.jpg', tag: 'Drug design', title: 'Allosteric Therapeutics', blurb: 'Designing positive and negative allosteric modulators as next-generation, subtype-selective drugs with cleaner pharmacology than orthosteric ligands.' },
+      { img: 'assets/research/neuropathic-pain.jpg', tag: 'Circuits', title: 'Neuropathic Pain', blurb: 'Dissecting nicotinic, glutamatergic and TRP channel contributions to chronic and inflammatory pain, from peripheral nociceptors to spinal cord circuits.' },
+      { img: 'assets/research/synaptic-maturation.jpg', tag: 'Development', title: 'Synaptic Maturation', blurb: 'The fetal-to-adult switch in nicotinic receptors and how asymmetric transmitter binding sites shape the maturing synaptic response.' },
+      { img: 'assets/research/allosteric-gpcrs.jpg', tag: 'Signalling', title: 'Allosteric GPCRs', blurb: 'Extending allosteric principles from ligand-gated ion channels to G-protein-coupled receptor signalling, modulation and biased agonism.' },
+      { img: 'assets/research/intracellular-ion-channels.jpg', tag: 'Organelles', title: 'Intracellular Ion Channels', blurb: 'Probing organellar and intracellular channels that regulate calcium handling, membrane dynamics and cellular signalling.' },
+    ];
+    const T = [
+      { fig: 'c01', cap: 'Simulated · cluster Po rises with [ACh]' },
+      { fig: 'c02', cap: 'Simulated · channel switches gating modes' },
+      { fig: 'c03', cap: 'Simulated · a type II PAM prolongs bursts; unitary current unchanged' },
+      { fig: 'c04', cap: 'Simulated · flickery TRPV1 bursts' },
+      { fig: 'c05', cap: 'Simulated · fetal γ: smaller, longer openings; adult ε: larger, briefer' },
+      { fig: 'c06', cap: 'Simulated · GIRK current activated by a Gi/o-coupled receptor' },
+      { fig: 'c07', cap: 'Simulated · whole-endolysosome current, PI(3,5)P₂ activation' },
+    ];
+    return {
+      research: R.map((r, i) => ({ ...r, ...T[i], seed: 31 + i * 7, num: '0' + (i + 1), delay: (i % 3) * 110 })),
+      methods: [
+        { n: '01', title: 'Single-channel patch clamp', desc: 'Microsecond-resolution recordings of individual channel openings.' },
+        { n: '02', title: 'Site-directed mutagenesis', desc: 'Mapping the residues that carry binding and gating energy.' },
+        { n: '03', title: 'Molecular dynamics', desc: 'All-atom simulation of receptor gating and ligand interactions.' },
+        { n: '04', title: 'Kinetic & energy modelling', desc: 'Linking rate constants to free-energy landscapes of activation.' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

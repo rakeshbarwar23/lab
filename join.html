@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="flat-links" content="1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Join us — Nayak Lab · IIT Delhi</title>
+<meta name="description" content="Open PhD, postdoc, RA and Masters positions in the Nayak Lab, IIT Delhi.">
+<link rel="icon" type="image/png" href="assets/logos/tkn-favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&amp;family=Geist+Mono:wght@400;500&amp;family=Newsreader:ital,opsz,wght@1,6..72,400&amp;display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#070c16;-webkit-font-smoothing:antialiased;}
+:focus-visible{outline:2px solid #f1d49a;outline-offset:3px;}
+::selection{background:#e0a53a;color:#070c16;}
+a{text-decoration:none;color:inherit;}
+a:hover{color:inherit;}
+img{max-width:100%;}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms !important;}}
+</style>
+<script src="./content.js"></script>
+<script src="./home-fx.js"></script>
+<script src="./trace-engine.js"></script>
+<script src="./figs-join.js"></script>
+<script src="./flatlinks.js"></script>
+</helmet>
+<div style="font-family:'Geist',sans-serif;color:#e8ecf3;background:#070c16;min-height:100vh;overflow-x:clip;">
+  <dc-import name="SiteNav" active="join" hint-size="100%,64px" style="position:sticky;top:0;z-index:200;"></dc-import>
+
+  <section id="main" style="position:relative;overflow:hidden;border-bottom:1px solid rgba(255,255,255,0.07);">
+    <canvas data-fig="join" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
+    <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,#070c16 30%,rgba(7,12,22,0.6) 48%,rgba(7,12,22,0) 58%),linear-gradient(180deg,transparent 80%,#070c16);"></div>
+    <div style="position:absolute;right:clamp(20px,5vw,40px);left:clamp(20px,5vw,40px);text-align:right;bottom:16px;font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:#7d889c;pointer-events:none;">Simulated · seal test, from pipette to gigaseal to whole-cell</div>
+    <div style="position:relative;max-width:1360px;margin:0 auto;padding:clamp(72px,10vw,136px) clamp(20px,5vw,40px) clamp(56px,7vw,88px);">
+      <div style="font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:0.2em;color:#e6b667;text-transform:uppercase;margin-bottom:22px;">Join us · Contact</div>
+      <h1 style="font-weight:500;font-size:clamp(38px,6vw,84px);line-height:1;letter-spacing:-0.04em;max-width:1000px;text-wrap:balance;margin-bottom:26px;">Come record some <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#f1d49a;letter-spacing:-0.02em;">channels</span> with us.</h1>
+      <p style="font-size:clamp(16px,1.5vw,18px);line-height:1.65;color:#aab3c3;max-width:640px;font-weight:300;">We are always looking for curious, rigorous people who want to understand how molecules compute. A background in physiology, biophysics, chemistry, physics or engineering is welcome — what matters most is enthusiasm for quantitative biology.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:32px;">
+        <a href="mailto:tnayak@bioschool.iitd.ac.in?subject=Joining%20the%20Nayak%20Lab" onMouseEnter="{{ boostOn }}" onMouseLeave="{{ boostOff }}" onFocus="{{ boostOn }}" onBlur="{{ boostOff }}" onTouchStart="{{ boostOn }}" onTouchEnd="{{ boostOff }}" style="font-size:15px;font-weight:500;color:#070c16;background:#f1d49a;padding:15px 28px;min-height:48px;display:flex;align-items:center;border-radius:999px;transition:transform .18s,box-shadow .18s;" style-hover="transform:translateY(-2px);box-shadow:0 0 0 8px rgba(241,212,154,0.14);">Email the PI →</a>
+        <a href="#positions" style="font-size:15px;font-weight:500;color:#e8ecf3;border:1px solid rgba(255,255,255,0.18);padding:15px 26px;min-height:48px;display:flex;align-items:center;border-radius:999px;transition:border-color .2s,background .2s;" style-hover="border-color:rgba(241,212,154,0.5);background:rgba(255,255,255,0.04);">See open positions ↓</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="positions" style="max-width:1360px;margin:0 auto;padding:clamp(56px,7vw,96px) clamp(20px,5vw,40px) 0;scroll-margin-top:72px;">
+    <div data-reveal="" style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:clamp(24px,3vw,36px);">
+      <h2 style="font-weight:500;font-size:clamp(30px,4vw,52px);letter-spacing:-0.035em;line-height:1;">Open <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#f1d49a;">positions</span></h2>
+      <span style="font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#7d889c;">{{ openCount }}</span>
+    </div>
+    <div ref="{{ posRef }}" style="display:grid;grid-template-columns:repeat({{ posCols }},minmax(0,1fr));gap:14px;align-items:stretch;">
+      <sc-for list="{{ positions }}" as="p" hint-placeholder-count="4">
+        <article data-reveal="16" data-reveal-delay="{{ p.delay }}" style="background:#0d1422;border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:clamp(24px,2.4vw,30px);display:flex;flex-direction:column;gap:14px;opacity:{{ p.op }};transition:border-color .25s,background .25s,transform .25s;" style-hover="border-color:rgba(241,212,154,0.4);background:#101a2c;transform:translateY(-2px);">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+            <span style="font-family:'Geist Mono',monospace;font-size:12px;color:#7d889c;">{{ p.num }}</span>
+            <sc-if value="{{ p.isOpen }}" hint-placeholder-val="{{ true }}">
+              <span style="display:flex;align-items:center;gap:7px;font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:#070c16;background:#f1d49a;padding:5px 11px;border-radius:999px;"><span style="width:6px;height:6px;border-radius:50%;background:#070c16;"></span>{{ p.status }}</span>
+            </sc-if>
+            <sc-if value="{{ p.isSoft }}" hint-placeholder-val="{{ false }}">
+              <span style="display:flex;align-items:center;gap:7px;font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:#f1d49a;border:1px solid rgba(241,212,154,0.45);padding:5px 11px;border-radius:999px;"><span style="width:6px;height:6px;border-radius:50%;background:#f1d49a;"></span>{{ p.status }}</span>
+            </sc-if>
+            <sc-if value="{{ p.closed }}" hint-placeholder-val="{{ false }}">
+              <span style="font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:#8792a6;border:1px solid rgba(255,255,255,0.15);padding:5px 11px;border-radius:999px;">{{ p.status }}</span>
+            </sc-if>
+          </div>
+          <h3 style="font-weight:500;font-size:clamp(20px,1.8vw,23px);letter-spacing:-0.02em;line-height:1.2;text-wrap:balance;">{{ p.title }}</h3>
+          <p style="font-size:14.5px;line-height:1.6;color:#98a2b4;font-weight:300;text-wrap:pretty;">{{ p.desc }}</p>
+          <sc-if value="{{ p.canApply }}" hint-placeholder-val="{{ true }}">
+            <a href="{{ p.mail }}" onMouseEnter="{{ boostOn }}" onMouseLeave="{{ boostOff }}" onFocus="{{ boostOn }}" onBlur="{{ boostOff }}" style="margin-top:auto;padding-top:16px;border-top:1px solid rgba(255,255,255,0.07);display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:44px;font-family:'Geist Mono',monospace;font-size:11.5px;letter-spacing:0.1em;text-transform:uppercase;color:#f1d49a;transition:color .2s;" style-hover="color:#fff;">{{ p.cta }}<span aria-hidden="true">→</span></a>
+          </sc-if>
+        </article>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:clamp(80px,10vw,128px) auto 0;padding:0 clamp(20px,5vw,40px);">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:16px;align-items:stretch;">
+      <div data-reveal="" style="border-radius:24px;border:1px solid rgba(241,212,154,0.25);background:radial-gradient(80% 120% at 100% 0%, rgba(224,165,58,0.18), transparent 60%),#0b1220;padding:clamp(28px,4vw,52px);display:flex;flex-direction:column;gap:22px;">
+        <div style="font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:0.2em;color:#e6b667;text-transform:uppercase;">How to apply</div>
+        <h2 style="font-weight:500;font-size:clamp(32px,4vw,48px);line-height:1;letter-spacing:-0.035em;">Write to <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#f1d49a;">us</span>.</h2>
+        <p style="font-size:16px;line-height:1.7;color:#aab3c3;font-weight:300;text-wrap:pretty;">Send a short email describing your research interests and what draws you to the lab, along with your CV. Mention any prior electrophysiology, molecular biology or computational experience.</p>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:auto;padding-top:6px;">
+          <a href="mailto:tnayak@bioschool.iitd.ac.in?subject=Joining%20the%20Nayak%20Lab" onMouseEnter="{{ boostOn }}" onMouseLeave="{{ boostOff }}" onFocus="{{ boostOn }}" onBlur="{{ boostOff }}" style="font-size:15px;font-weight:500;color:#070c16;background:#f1d49a;padding:15px 28px;min-height:48px;display:flex;align-items:center;border-radius:999px;transition:transform .18s,box-shadow .18s;" style-hover="transform:translateY(-2px);box-shadow:0 0 0 8px rgba(241,212,154,0.14);">Email the PI →</a>
+          <button onClick="{{ copy }}" style="font-size:14px;font-weight:500;color:#e8ecf3;background:transparent;border:1px solid rgba(255,255,255,0.18);padding:14px 22px;min-height:48px;border-radius:999px;cursor:pointer;transition:border-color .2s,background .2s;" style-hover="border-color:rgba(241,212,154,0.5);background:rgba(255,255,255,0.04);">{{ copyLabel }}</button>
+        </div>
+      </div>
+      <div data-reveal="" data-reveal-delay="120" style="border-radius:24px;border:1px solid rgba(255,255,255,0.07);background:#0d1422;padding:clamp(28px,4vw,52px);display:flex;flex-direction:column;gap:26px;">
+        <div style="font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:0.2em;color:#e6b667;text-transform:uppercase;">Reach the lab</div>
+        <div>
+          <div style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#7d889c;margin-bottom:8px;">Email</div>
+          <a href="mailto:tnayak@bioschool.iitd.ac.in" style="font-size:clamp(17px,2vw,21px);font-weight:500;border-bottom:1px solid rgba(241,212,154,0.5);padding-bottom:3px;overflow-wrap:anywhere;transition:color .2s,border-color .2s;" style-hover="color:#f1d49a;border-color:#f1d49a;">tnayak@bioschool.iitd.ac.in</a>
+        </div>
+        <div>
+          <div style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#7d889c;margin-bottom:8px;">Address</div>
+          <p style="font-size:15.5px;line-height:1.7;color:#aab3c3;font-weight:300;margin-bottom:12px;">Kusuma School of Biological Sciences<br>Indian Institute of Technology Delhi<br>Hauz Khas, New Delhi 110016, India</p>
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=Kusuma+School+of+Biological+Sciences+IIT+Delhi" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;min-height:44px;font-family:'Geist Mono',monospace;font-size:11.5px;letter-spacing:0.1em;text-transform:uppercase;color:#f1d49a;" style-hover="color:#fff;">Open in Maps ↗</a>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;padding-top:22px;border-top:1px solid rgba(255,255,255,0.07);margin-top:auto;">
+          <img src="./iit_delhi_logo_white-mrrkilot-zz90.png" alt="IIT Delhi" style="height:48px;width:48px;object-fit:contain;">
+          <span style="font-size:14px;color:#c3cad6;line-height:1.4;">Indian Institute of Technology Delhi</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div style="height:clamp(80px,10vw,128px);"></div>
+  <dc-import name="SiteFooter" hint-size="100%,340px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { copied: false, cols: 4 };
+  posRef = React.createRef();
+  _measure() { const el = this.posRef.current; if (!el) return; const w = el.clientWidth, c = w >= 1040 ? 4 : w >= 540 ? 2 : 1; if (c !== this.state.cols) this.setState({ cols: c }); }
+  componentDidMount() {
+    this._ro = new ResizeObserver(() => this._measure());
+    const w = () => { if (this.posRef.current) { this._ro.observe(this.posRef.current); this._measure(); } else this._w = setTimeout(w, 60); }; w(); const go = () => { if (!window.LAB_CONTENT) { this._t = setTimeout(go, 40); return; } this.forceUpdate(); }; go(); }
+  componentWillUnmount() { clearTimeout(this._w); this._ro && this._ro.disconnect(); clearTimeout(this._t); clearTimeout(this._c); }
+  renderVals() {
+    const EMAIL = 'tnayak@bioschool.iitd.ac.in';
+    const positions = (((window.LAB_CONTENT || {}).positions) || []).map((p, i) => {
+      const st = String(p.status || '').toLowerCase(), closed = st === 'closed';
+      return {
+        title: p.title, status: p.status, desc: p.desc, closed, isOpen: st === 'open', isSoft: !closed && st !== 'open',
+        canApply: !closed, op: closed ? 0.72 : 1, num: String(i + 1).padStart(2, '0'), delay: i * 90,
+        cta: st === 'open' ? 'Apply by email' : 'Enquire by email',
+        mail: 'mailto:' + EMAIL + '?subject=' + encodeURIComponent((st === 'open' ? 'Application: ' : 'Enquiry: ') + p.title + ' — Nayak Lab'),
+      };
+    });
+    const b = v => () => { (window.__chanBoost = window.__chanBoost || {}).join = v; };
+    const nOpen = positions.filter(p => !p.closed).length;
+    return {
+      positions, posRef: this.posRef, posCols: Math.min(this.state.cols, Math.max(1, positions.length)), boostOn: b(true), boostOff: b(false),
+      openCount: nOpen + ' of ' + positions.length + ' accepting',
+      copyLabel: this.state.copied ? 'Copied ✓' : 'Copy email',
+      copy: () => {
+        const done = () => { this.setState({ copied: true }); clearTimeout(this._c); this._c = setTimeout(() => this.setState({ copied: false }), 1800); };
+        const legacy = () => { const t = document.createElement('textarea'); t.value = EMAIL; t.setAttribute('readonly', ''); t.style.cssText = 'position:fixed;opacity:0;'; document.body.appendChild(t); t.select(); try { if (document.execCommand('copy')) done(); } catch (e) {} t.remove(); };
+        if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(EMAIL).then(done, legacy); else legacy();
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

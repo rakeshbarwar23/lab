@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Nayak Lab Website · How to update</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #faf9f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+    #__bundler_loading { position: fixed; bottom: 20px; right: 20px; font: 13px/1.4 -apple-system, BlinkMacSystemFont, sans-serif; color: #666; background: #fff; padding: 8px 14px; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.12); z-index: 10000; }
+    #__bundler_thumbnail { position: fixed; inset: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #faf9f5; z-index: 9999; }
+    #__bundler_thumbnail svg { width: 100%; height: 100%; object-fit: contain; }
+    #__bundler_placeholder { color: #999; font-size: 14px; }
+  </style>
+  <noscript>
+    <style>#__bundler_loading { display: none; }</style>
+    <div style="position:fixed;bottom:12px;left:12px;font:13px/1.4 -apple-system,BlinkMacSystemFont,sans-serif;color:#999;background:rgba(255,255,255,0.9);padding:6px 12px;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,0.08);z-index:10000;">
+      This page requires JavaScript to display.
+    </div>
+  </noscript>
+</head>
+<body>
+  <div id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" fill="#0c2340"></rect>
+  <g fill="none" stroke="#e6b667" stroke-width="4" stroke-linecap="round">
+    <line x1="34" y1="34" x2="70" y2="34"></line>
+    <line x1="34" y1="50" x2="70" y2="50"></line>
+    <line x1="34" y1="66" x2="58" y2="66"></line>
+  </g>
+  <circle cx="26" cy="34" r="3" fill="#e6b667"></circle>
+  <circle cx="26" cy="50" r="3" fill="#e6b667"></circle>
+  <circle cx="26" cy="66" r="3" fill="#e6b667"></circle>
+</svg>
+</div>
+  <div id="__bundler_loading">Unpacking...</div>
+
+  <script>
+    
+document.addEventListener('DOMContentLoaded', async function() {
+  const loading = document.getElementById('__bundler_loading');
+  function setStatus(msg) { if (loading) loading.textContent = msg; }
+
+  const FONT_MIME = /^(font[/]|application[/](x-)?font-|application[/]vnd\.ms-fontobject)/i;
+  const MIME_TOKEN = /^[\w.+-]+[/][\w.+-]+$/;
+  function toBase64(bytes) {
+    let bin = '';
+    for (let i = 0; i < bytes.length; i += 0x8000) {
+      bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    }
+    return btoa(bin);
+  }
+
+  // Error sink persists across replaceWith since it's on window, not the DOM.
+  window.addEventListener('error', function(e) {
+    // Failed resource loads (CSP-blocked links, scripts, images) fire plain
+    // events at the element — warn only; real JS errors carry message/error.
+    if (!e.message && !e.error && e.target && e.target !== window) {
+      console.warn('[bundle] resource failed to load:',
+        e.target.tagName, String(e.target.src || e.target.href || ''));
+      return;
+    }
+    var p = document.body || document.documentElement;
+    var d = document.getElementById('__bundler_err') || p.appendChild(document.createElement('div'));
+    d.id = '__bundler_err';
+    d.style.cssText = 'position:fixed;bottom:12px;left:12px;right:12px;font:12px/1.4 ui-monospace,monospace;background:#2a1215;color:#ff8a80;padding:10px 14px;border-radius:8px;border:1px solid #5c2b2e;z-index:99999;white-space:pre-wrap;max-height:40vh;overflow:auto';
+    d.textContent = (d.textContent ? d.textContent + String.fromCharCode(10) : '') +
+      '[bundle] ' + (e.message || e.type) +
+      (e.filename ? ' (' + e.filename.slice(0, 60) + ':' + e.lineno + ')' : '');
+  }, true);
+
+  try {
+    const manifestEl = document.querySelector('script[type="__bundler/manifest"]');
+    const templateEl = document.querySelector('script[type="__bundler/template"]');
+    if (!manifestEl || !templateEl) {
+      setStatus('Error: missing bundle data');
+      console.error('[bundler] Missing script tags — manifestEl:', !!manifestEl, 'templateEl:', !!templateEl);
+      return;
+    }
+
+    const manifest = JSON.parse(manifestEl.textContent);
+    let template = JSON.parse(templateEl.textContent);
+
+    // Nested page bundles (iframe targets). Each ships ONCE, in the ROOT
+    // document's manifest; frame srcs carry an about:blank#<uuid> marker
+    // instead of a substitutable uuid. Every document mints the blobs for
+    // its OWN frames — from local text at the root, or text obtained from
+    // its DIRECT parent over the relay protocol below — so each frame
+    // navigation stays same-origin with its initiator and a deduped page
+    // loads at any depth on any host, including a file:// download's
+    // opaque origins (where a blob minted by one document cannot be
+    // navigated to by another).
+    const pageOrderEl = document.querySelector('script[type="__bundler/page_order"]');
+    const pageOrder = pageOrderEl ? JSON.parse(pageOrderEl.textContent) : [];
+    const pageSet = new Set(pageOrder);
+    const pageTexts = {};
+
+    // ── Nested-page text protocol (parent-chain relay) ──
+    // Page bundles ship once, in the ROOT document's manifest. Every
+    // document mints the blobs for its OWN frames, obtaining page text
+    // through a strict parent-chain relay: a document only ever SENDS to
+    // its direct parent (which, for every document the publisher's own
+    // runtime minted, is another publisher document) and only ACCEPTS
+    // text from that direct parent; requests from below are honored only
+    // for the document's own child frames, and the ROOT never sends
+    // upward at all. That last rule is load-bearing: the artifact host's
+    // frame-ancestors allows claude.ai (and friends) to frame an
+    // artifact, so window.top can be a FOREIGN document — a top-addressed
+    // protocol would hand page uuids to that ancestor and accept forged
+    // "page text" from it, minting attacker HTML as an artifact-origin
+    // blob document. The chain never touches the ancestor: requests stop
+    // at the root, replies are origin-addressed per hop (never '*' when
+    // an origin exists), and both directions are origin-gated (on https
+    // a foreign sender's origin can never equal this document's; in
+    // opaque contexts — file:// — everything serializes as 'null', where
+    // an embedded EXTERNAL frame still fails the gate by carrying its
+    // own real origin, and a sandboxed child of such a frame is excluded
+    // by the own-child-frames check plus uuid unguessability). Shape is
+    // deny-by-default: one request form, one reply form, no error
+    // replies.
+    // window.origin is the SERIALIZED SECURITY origin ('null' in opaque
+    // contexts such as a sandboxed preview iframe) — location.origin is
+    // computed from the URL and stays 'https://…' even when the document
+    // is sandboxed, which would misgate every opaque chain.
+    const OWN_TARGET = /^https?:[/][/]/.test(window.origin || '')
+      ? window.origin
+      : '*';
+    function trustedOrigin(e) {
+      if (e.origin === window.origin) return true; // https chains; opaque==opaque
+      // file:// trees: Chrome serializes the file document's origin as
+      // 'file://' while the blob: documents it mints serialize as 'null',
+      // so the two legitimate shapes can never string-match — accept the
+      // pair in both directions. https origins never serialize as either,
+      // and sender identity (own child frame / direct parent) is checked
+      // separately.
+      return (
+        (e.origin === 'null' &&
+          (window.origin === 'file://' ||
+            window.location.protocol === 'file:')) ||
+        (/^file:/.test(e.origin) && window.origin === 'null')
+      );
+    }
+    // Non-empty only in the root document (nested bundles ship an empty
+    // island), so it doubles as the root marker: the root answers from
+    // local text and treats a miss as authoritative — never relaying to
+    // its (possibly foreign) parent.
+    const isPageRoot = pageOrder.length > 0;
+    const blobUrls = {};
+    const resourceBlobs = {};
+    const UUID_SHAPE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+    const pendingFrames = {}; // uuid -> [{el, frag}] awaiting text for own frames
+    const pendingRelays = {}; // uuid -> [childWindow] awaiting text to pass down
+    function mountPage(el, frag, text) {
+      const pageBlob = new Blob([text], { type: 'text/html' });
+      const u = URL.createObjectURL(pageBlob);
+      resourceBlobs[u] = pageBlob;
+      el.src = u + frag;
+    }
+    function deliverPage(uuid, text) {
+      const frames = pendingFrames[uuid];
+      delete pendingFrames[uuid];
+      if (frames) for (const f of frames) mountPage(f.el, f.frag, text);
+      const relays = pendingRelays[uuid];
+      delete pendingRelays[uuid];
+      if (relays) {
+        for (const cw of relays) {
+          try { cw.postMessage({ __bundler_page: uuid, __bundler_text: text }, OWN_TARGET); } catch (err) { /* gone */ }
+        }
+      }
+    }
+    function ownFrameWindows() {
+      const out = [];
+      for (const f of Array.from(document.querySelectorAll('iframe'))) {
+        try { if (f.contentWindow) out.push(f.contentWindow); } catch (err) { /* detached */ }
+      }
+      return out;
+    }
+    window.addEventListener('message', function (e) {
+      const d = e.data;
+      if (!d || typeof d !== 'object' || !e.source) return;
+      // Origin gate first; the structural checks below (own-child-frames
+      // for requests, direct-parent + solicited-uuid for replies, the
+      // root's never-relay rule) are what hold in fully opaque chains
+      // where origin strings can't discriminate — a sandboxed root's
+      // FOREIGN wrapper still fails all three even though both serialize
+      // as real-vs-'null' rather than matching.
+      if (!trustedOrigin(e)) return;
+      if (typeof d.__bundler_need === 'string' && UUID_SHAPE.test(d.__bundler_need)) {
+        // Requests are honored only for this document's own child frames.
+        if (ownFrameWindows().indexOf(e.source) < 0) return;
+        const uuid = d.__bundler_need;
+        const text = pageTexts[uuid];
+        if (typeof text === 'string') {
+          try { e.source.postMessage({ __bundler_page: uuid, __bundler_text: text }, OWN_TARGET); } catch (err) { /* gone */ }
+          return;
+        }
+        if (isPageRoot || window.parent === window) return; // authoritative miss
+        const waiting = pendingRelays[uuid];
+        if (waiting) {
+          if (waiting.indexOf(e.source) < 0) waiting.push(e.source);
+          return;
+        }
+        // Never-answered uuids would otherwise accumulate forever under a
+        // request spray; past the cap (far above any real page count) new
+        // relays are dropped rather than remembered.
+        if (Object.keys(pendingRelays).length >= 128) return;
+        pendingRelays[uuid] = [e.source];
+        window.parent.postMessage({ __bundler_need: uuid }, OWN_TARGET);
+      } else if (
+        typeof d.__bundler_page === 'string' &&
+        UUID_SHAPE.test(d.__bundler_page) &&
+        typeof d.__bundler_text === 'string'
+      ) {
+        // The shape test is load-bearing beyond tidiness: the solicited
+        // check below uses the in operator, which matches prototype keys
+        // ('__proto__', 'constructor') — an unshaped key would reach
+        // deliverPage and throw, painting the error banner.
+        // Text is accepted only from the direct parent — the document
+        // that minted this one.
+        if (e.source !== window.parent || window.parent === window) return;
+        if (!(d.__bundler_page in pendingFrames) && !(d.__bundler_page in pendingRelays)) return;
+        deliverPage(d.__bundler_page, d.__bundler_text);
+      }
+    });
+
+    const uuids = Object.keys(manifest);
+    setStatus('Unpacking ' + uuids.length + ' assets...');
+
+    await Promise.all(uuids.map(async (uuid) => {
+      const entry = manifest[uuid];
+      try {
+        const binaryStr = atob(entry.data);
+        const bytes = new Uint8Array(binaryStr.length);
+        for (let i = 0; i < binaryStr.length; i++) bytes[i] = binaryStr.charCodeAt(i);
+
+        let finalBytes = bytes;
+        if (entry.compressed) {
+          if (typeof DecompressionStream !== 'undefined') {
+            const ds = new DecompressionStream('gzip');
+            const writer = ds.writable.getWriter();
+            const reader = ds.readable.getReader();
+            writer.write(bytes);
+            writer.close();
+            const chunks = [];
+            let totalLen = 0;
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              chunks.push(value);
+              totalLen += value.length;
+            }
+            finalBytes = new Uint8Array(totalLen);
+            let offset = 0;
+            for (const chunk of chunks) { finalBytes.set(chunk, offset); offset += chunk.length; }
+          } else {
+            console.warn('DecompressionStream not available, asset ' + uuid + ' may not render');
+          }
+        }
+
+        if (pageSet.has(uuid)) {
+          pageTexts[uuid] = new TextDecoder().decode(finalBytes);
+          return;
+        }
+        if (FONT_MIME.test(entry.mime) && MIME_TOKEN.test(entry.mime)) {
+          // Strict artifact hosts allow font-src data: but not blob:.
+          blobUrls[uuid] = 'data:' + entry.mime + ';base64,' +
+            (entry.compressed ? toBase64(finalBytes) : entry.data);
+        } else {
+          const blob = new Blob([finalBytes], { type: entry.mime });
+          blobUrls[uuid] = URL.createObjectURL(blob);
+          resourceBlobs[blobUrls[uuid]] = blob;
+        }
+      } catch (err) {
+        console.error('Failed to decode asset ' + uuid + ':', err);
+        const blob = new Blob([], { type: entry.mime });
+        blobUrls[uuid] = URL.createObjectURL(blob);
+        resourceBlobs[blobUrls[uuid]] = blob;
+      }
+    }));
+
+    const extResEl = document.querySelector('script[type="__bundler/ext_resources"]');
+    const extResources = extResEl ? JSON.parse(extResEl.textContent) : [];
+    const resourceMap = {};
+    for (const entry of extResources) {
+      if (blobUrls[entry.uuid]) resourceMap[entry.id] = blobUrls[entry.uuid];
+    }
+
+    // Artifact-host CSP (connect-src 'self') refuses fetch() of blob: URLs —
+    // consumers read these Blobs directly. Survives the swap like the error sink.
+    window.__resourceBlobs = resourceBlobs;
+
+    setStatus('Rendering...');
+    // Page uuids have no blob here — they ride inside about:blank#<uuid>
+    // frame markers the pass below resolves after the swap.
+    for (const uuid of uuids) {
+      if (pageSet.has(uuid)) continue;
+      template = template.split(uuid).join(blobUrls[uuid]);
+    }
+
+    // Strip integrity + crossorigin — blob URLs from a file:// document inherit
+    // a null origin, so crossorigin forces a CORS fetch that SRI then rejects.
+    // The manifest bytes are ours; SRI protects against CDN compromise, not this.
+    template = template.replace(/\s+integrity="[^"]*"/gi, '').replace(/\s+crossorigin="[^"]*"/gi, '');
+
+    const resourceScript = '<script>window.__resources = ' +
+      JSON.stringify(resourceMap).replace(/<\//g, '<\\/') +
+      ';</' + 'script>';
+    // Inject after <head> so the DOCTYPE stays first; prepending the script
+    // would push the parser into quirks mode. DOMParser always emits a <head>
+    // (synthesizing one if the source HTML omitted it) but may carry
+    // attributes through, so match the full opening tag. slice() rather than
+    // replace() keeps us clear of $-pattern substitution in resourceScript.
+    const headOpen = template.match(/<head[^>]*>/i);
+    if (headOpen) {
+      const i = headOpen.index + headOpen[0].length;
+      template = template.slice(0, i) + resourceScript + template.slice(i);
+    }
+
+    // Parse the template and swap the root element. Scripts inserted via
+    // DOMParser/replaceWith are inert per spec — re-create each with
+    // createElement so they execute, awaiting onload for src scripts to
+    // preserve ordering (React before ReactDOM before Babel before text/babel).
+    const doc = new DOMParser().parseFromString(template, 'text/html');
+    document.documentElement.replaceWith(doc.documentElement);
+
+    // Resolve page-frame markers: mint this document's own blob for each
+    // framed page — from local text when this is the root, otherwise by
+    // asking the direct parent over the relay protocol above. An
+    // unanswered request leaves the frame on about:blank, the same
+    // degraded state as a refused embed.
+    {
+      const MARKER = /^about:blank#([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})(#.*)?$/;
+      const needed = [];
+      for (const el of Array.from(document.querySelectorAll('iframe'))) {
+        const m = MARKER.exec(el.getAttribute('src') || '');
+        if (!m) continue;
+        const text = pageTexts[m[1]];
+        if (typeof text === 'string') {
+          mountPage(el, m[2] || '', text);
+        } else if (window.parent !== window && !isPageRoot) {
+          const had = pendingFrames[m[1]];
+          (pendingFrames[m[1]] = had || []).push({ el: el, frag: m[2] || '' });
+          if (!had) needed.push(m[1]);
+        }
+      }
+      for (const uuid of needed) {
+        window.parent.postMessage({ __bundler_need: uuid }, OWN_TARGET);
+      }
+    }
+
+    const dead = Array.from(document.scripts);
+    for (const old of dead) {
+      const s = document.createElement('script');
+      for (const a of old.attributes) s.setAttribute(a.name, a.value);
+      s.textContent = old.textContent;
+      // text/babel scripts with a src: read and inline. transformScriptTags
+      // does XHR against the src, but blob:null/ from a file:// origin is
+      // silently dropped. Inlining makes it a plain inline babel script,
+      // which transformScriptTags handles unconditionally.
+      if ((s.type === 'text/babel' || s.type === 'text/jsx') && s.src) {
+        const pre = resourceBlobs[s.src.split('#')[0]];
+        s.textContent = pre ? await pre.text() : await (await fetch(s.src)).text();
+        s.removeAttribute('src');
+      }
+      const p = s.src ? new Promise(function(r) { s.onload = s.onerror = r; }) : null;
+      old.replaceWith(s);
+      if (p) await p;
+    }
+    // Babel standalone auto-transforms type=text/babel on DOMContentLoaded,
+    // which fired before we swapped the document. Trigger manually if present.
+    if (window.Babel && typeof window.Babel.transformScriptTags === 'function') {
+      window.Babel.transformScriptTags();
+    }
+  } catch (err) {
+    setStatus('Error unpacking: ' + err.message);
+    console.error('Bundle unpack error:', err);
+  }
+});
+
+  </script>
+
+  <script type="__bundler/manifest">
+{}
+  </script>
+
+  <script type="__bundler/ext_resources">
+[]
+  </script>
+
+  <script type="__bundler/page_order">
+[]
+  </script>
+
+  <script type="__bundler/template">
+"<!DOCTYPE html>\n<html lang=\"en\"><head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Nayak Lab Website · How to update<\u002Ftitle>\n\n<style>\n  @page { size: A4; margin: 18mm 16mm; }\n  *{box-sizing:border-box;margin:0;padding:0;}\n  body{font-family:-apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif;color:#1a1f2b;line-height:1.6;background:#f6f4ef;-webkit-font-smoothing:antialiased;}\n  .sheet{max-width:820px;margin:0 auto;background:#fff;padding:clamp(28px,5vw,56px);}\n  header{border-bottom:3px solid #0c2340;padding-bottom:20px;margin-bottom:32px;}\n  .kick{font-family:\"IBM Plex Mono\",ui-monospace,monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#8a5410;margin-bottom:8px;}\n  h1{font-family:Georgia,\"Times New Roman\",serif;font-size:clamp(26px,4vw,34px);color:#0c2340;font-weight:600;line-height:1.15;}\n  header p{color:#5c6470;margin-top:10px;font-size:15px;}\n  h2{font-family:Georgia,serif;font-size:21px;color:#0c2340;margin:38px 0 4px;padding-top:22px;border-top:1px solid #e3ddd2;}\n  h2 .num{color:#8a5410;font-family:\"IBM Plex Mono\",monospace;font-size:15px;margin-right:10px;}\n  h2:first-of-type{border-top:none;padding-top:0;}\n  h3{font-size:16px;color:#1a1f2b;margin:22px 0 6px;}\n  p,li{font-size:14.5px;color:#2b3240;}\n  p{margin:8px 0;}\n  ol,ul{margin:8px 0 8px 4px;padding-left:22px;}\n  li{margin:6px 0;}\n  ol.steps{counter-reset:s;list-style:none;padding-left:0;}\n  ol.steps>li{counter-increment:s;position:relative;padding:6px 0 6px 40px;border-bottom:1px dashed #ece7dd;}\n  ol.steps>li:last-child{border-bottom:none;}\n  ol.steps>li::before{content:counter(s);position:absolute;left:0;top:6px;width:26px;height:26px;background:#0c2340;color:#fff;border-radius:50%;font-family:\"IBM Plex Mono\",monospace;font-size:13px;display:flex;align-items:center;justify-content:center;font-weight:600;}\n  code,.path{font-family:\"IBM Plex Mono\",ui-monospace,monospace;font-size:.9em;background:#f1ede4;border:1px solid #e3ddd2;border-radius:4px;padding:1px 6px;color:#8a5410;white-space:nowrap;}\n  .note{background:#eef3fb;border-left:4px solid #3862a8;border-radius:0 8px 8px 0;padding:14px 18px;margin:18px 0;font-size:14px;}\n  .warn{background:#fbf1e8;border-left:4px solid #c07a1e;border-radius:0 8px 8px 0;padding:14px 18px;margin:18px 0;font-size:14px;}\n  .warn b,.note b{color:#0c2340;}\n  .tbl{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px;}\n  .tbl th,.tbl td{text-align:left;padding:9px 12px;border:1px solid #e3ddd2;vertical-align:top;}\n  .tbl th{background:#0c2340;color:#fff;font-weight:600;}\n  .tbl tr:nth-child(even) td{background:#faf8f4;}\n  .card{background:#faf8f4;border:1px solid #e3ddd2;border-radius:10px;padding:16px 20px;margin:16px 0;}\n  .big{font-size:15.5px;font-weight:600;color:#0c2340;}\n  footer{margin-top:40px;padding-top:18px;border-top:1px solid #e3ddd2;font-size:12.5px;color:#8a8472;}\n  .tree{font-family:\"IBM Plex Mono\",monospace;font-size:13px;line-height:1.7;background:#0c2340;color:#dbe2ee;border-radius:10px;padding:18px 22px;margin:14px 0;overflow-x:auto;}\n  .tree .c{color:#e6b667;}\n  .tree .m{color:#8fa7cf;}\n  @media print{ body{background:#fff;} .sheet{max-width:none;padding:0;} .note,.warn,.card,.tbl,ol.steps>li{break-inside:avoid;} h2{break-after:avoid;} }\n<\u002Fstyle>\n<\u002Fhead>\n<body>\n<div class=\"sheet\">\n<header>\n  <div class=\"kick\">Nayak Lab · IIT Delhi — Website Handbook<\u002Fdiv>\n  <h1>How to update the lab website<\u002Fh1>\n  <p>A simple guide for lab members. No coding needed — everything routine is done through one editor page. Keep this file with the website.<\u002Fp>\n<\u002Fheader>\n\n<h2><span class=\"num\">01<\u002Fspan>The one thing to understand<\u002Fh2>\n<p>All the content that changes over time — people, publications, gallery, lab updates, research themes and open positions — lives in a single file called <span class=\"path\">content.js<\u002Fspan>. Every page of the site reads from it.<\u002Fp>\n<div class=\"note\"><b>You never edit the web pages themselves.<\u002Fb> You edit content in a friendly editor, download an updated <span class=\"path\">content.js<\u002Fspan>, and upload that one file to the server. That's the whole job.<\u002Fdiv>\n<p>Because everything comes from that one file, updating a person or a paper <b>once<\u002Fb> also updates the homepage previews automatically — there is no double entry.<\u002Fp>\n\n<h2><span class=\"num\">02<\u002Fspan>The routine update — step by step<\u002Fh2>\n<ol class=\"steps\">\n  <li><b>Open the editor.<\u002Fb> In a browser, open <span class=\"path\">admin.html<\u002Fspan> (it lives in the website folder). It loads all the current content automatically.<\u002Fli>\n  <li><b>Pick a section<\u002Fb> from the left menu: People, Publications, Book / Under review, Lab updates, Research themes, Gallery, or Open positions.<\u002Fli>\n  <li><b>Make your change<\u002Fb> — add, edit, reorder (↑ ↓ arrows) or delete entries. See the section guide below for specifics.<\u002Fli>\n  <li><b>Click “Download content.js”<\u002Fb> (top-right). Your browser saves a new <span class=\"path\">content.js<\u002Fspan> file (usually to your Downloads folder).<\u002Fli>\n  <li><b>Upload that file to the server<\u002Fb>, replacing the old <span class=\"path\">content.js<\u002Fspan>. (See section 05 for how to upload.)<\u002Fli>\n  <li><b>Refresh the live website<\u002Fb> to confirm your change appears. Done.<\u002Fli>\n<\u002Fol>\n<div class=\"warn\"><b>Coming back later to edit again?<\u002Fb> Always click <b>“Import file”<\u002Fb> in the editor first and choose the current <span class=\"path\">content.js<\u002Fspan>, so you start from what is live — not from an old version.<\u002Fdiv>\n\n<h2><span class=\"num\">03<\u002Fspan>What each section does<\u002Fh2>\n\n<h3>People — new joiners &amp; alumni<\u002Fh3>\n<ul>\n  <li><b>New member:<\u002Fb> click “+ Add entry”, fill in name, role, bio and (optionally) a photo path.<\u002Fli>\n  <li><b>Someone leaves:<\u002Fb> just change their <b>Section<\u002Fb> dropdown from <code>current<\u002Fcode> to <code>alumni<\u002Fcode>. They move to the alumni list automatically — do not delete them.<\u002Fli>\n  <li><b>No photo yet?<\u002Fb> Leave the photo field blank and the site shows the person's initials instead.<\u002Fli>\n<\u002Ful>\n\n<h3>Publications<\u002Fh3>\n<p>Add the paper with its year, title, authors, journal and a DOI/URL link. It appears on the Publications page grouped by year, and the four newest also show as “Recent work” on the homepage. Use <b>Book / Under review<\u002Fb> for chapters and papers not yet published.<\u002Fp>\n\n<h3>Lab updates (homepage news)<\u002Fh3>\n<p>Short dated announcements shown on the homepage. Add a date, a tag (e.g. Research, Publication, People, Talk, Grant) and the text.<\u002Fp>\n\n<h3>Gallery<\u002Fh3>\n<p>A list of photos. The <b>first<\u002Fb> photo is the large featured one. Reorder with the arrows. Remember to also upload the actual image files (see section 04).<\u002Fp>\n\n<h3>Open positions<\u002Fh3>\n<p>Add or edit positions. To close a position without deleting it, set its <b>status<\u002Fb> to <code>Closed<\u002Fcode> — the card is automatically greyed out. Any other status (Open, Rolling, Enquire) shows normally.<\u002Fp>\n\n<h2><span class=\"num\">04<\u002Fspan>Adding photos &amp; images<\u002Fh2>\n<p>Image files live in the <span class=\"path\">assets/<\u002Fspan> folder, in these sub-folders:<\u002Fp>\n<table class=\"tbl\">\n  <tbody><tr><th>What<\u002Fth><th>Folder<\u002Fth><th>Example path to type in the editor<\u002Fth><\u002Ftr>\n  <tr><td>People photos<\u002Ftd><td><span class=\"path\">assets/people/<\u002Fspan><\u002Ftd><td><code>assets/people/riya.png<\u002Fcode><\u002Ftd><\u002Ftr>\n  <tr><td>Gallery photos<\u002Ftd><td><span class=\"path\">assets/gallery/<\u002Fspan><\u002Ftd><td><code>assets/gallery/2026-retreat.jpeg<\u002Fcode><\u002Ftd><\u002Ftr>\n  <tr><td>Research theme images<\u002Ftd><td><span class=\"path\">assets/research/<\u002Fspan><\u002Ftd><td><code>assets/research/new-theme.png<\u002Fcode><\u002Ftd><\u002Ftr>\n<\u002Ftbody><\u002Ftable>\n<ol class=\"steps\">\n  <li>Upload the image file into the correct <span class=\"path\">assets/…<\u002Fspan> sub-folder on the server.<\u002Fli>\n  <li>In the editor, type that same path into the photo/image field. A preview appears when the path is correct.<\u002Fli>\n  <li>Download <span class=\"path\">content.js<\u002Fspan> and upload it as usual.<\u002Fli>\n<\u002Fol>\n<div class=\"note\"><b>Tip:<\u002Fb> keep image files reasonably small (roughly under 1&nbsp;MB) and use simple names — no spaces, all lowercase, e.g. <code>rakesh-barwar.png<\u002Fcode>.<\u002Fdiv>\n\n<h2><span class=\"num\">05<\u002Fspan>Uploading files to the server<\u002Fh2>\n<p>The website is hosted on the IIT Delhi web space. You upload files using whatever method the department uses — usually an <b>SFTP/FTP program<\u002Fb> (e.g. FileZilla, WinSCP) or a web-based file manager. Ask the department IT contact for the login details.<\u002Fp>\n<ol class=\"steps\">\n  <li>Connect to the server with your credentials.<\u002Fli>\n  <li>Go to the website's folder (where <span class=\"path\">index.html<\u002Fspan> lives).<\u002Fli>\n  <li>Upload the updated <span class=\"path\">content.js<\u002Fspan> (and any new images), overwriting the old file when asked.<\u002Fli>\n  <li>Open the live site in a browser and refresh to check.<\u002Fli>\n<\u002Fol>\n\n<h2><span class=\"num\">06<\u002Fspan>What's in the website folder<\u002Fh2>\n<div class=\"tree\">\nsite/<br>\n├── <span class=\"c\">index.html<\u002Fspan> <span class=\"m\">← homepage<\u002Fspan><br>\n├── Research.dc.html · Publications.dc.html · People.dc.html<br>\n├── Teaching.dc.html · Gallery.dc.html · Join.dc.html<br>\n├── SiteNav.dc.html · SiteFooter.dc.html <span class=\"m\">← shared header/footer<\u002Fspan><br>\n├── <span class=\"c\">content.js<\u002Fspan> <span class=\"m\">← THE file you edit<\u002Fspan><br>\n├── <span class=\"c\">admin.html<\u002Fspan> <span class=\"m\">← the editor you open<\u002Fspan><br>\n├── support.js · patchtrace.js <span class=\"m\">← site machinery, do not touch<\u002Fspan><br>\n└── assets/ <span class=\"m\">← all images (people, gallery, research, logos)<\u002Fspan>\n<\u002Fdiv>\n<div class=\"warn\"><b>Only ever edit <span class=\"path\">content.js<\u002Fspan><\u002Fb> (via the editor) and add files to <span class=\"path\">assets/<\u002Fspan>. Do not rename or edit the <span class=\"path\">.dc.html<\u002Fspan> pages, <span class=\"path\">support.js<\u002Fspan> or <span class=\"path\">patchtrace.js<\u002Fspan> unless you know what you're doing.<\u002Fdiv>\n\n<h2><span class=\"num\">07<\u002Fspan>Troubleshooting<\u002Fh2>\n<table class=\"tbl\">\n  <tbody><tr><th>Problem<\u002Fth><th>Cause &amp; fix<\u002Fth><\u002Ftr>\n  <tr><td>No header, footer or animations when I open a page by double-clicking it on my computer<\u002Ftd><td>This is normal. The pages must be served by a web server. It works correctly once uploaded and opened via the <code>http(s)://<\u002Fcode> address. To preview on your own machine, run a local server (see below) instead of double-clicking.<\u002Ftd><\u002Ftr>\n  <tr><td>My change isn't showing on the live site<\u002Ftd><td>Make sure you uploaded the new <span class=\"path\">content.js<\u002Fspan> and overwrote the old one, then hard-refresh the page (Ctrl+Shift+R / Cmd+Shift+R) to clear the cache.<\u002Ftd><\u002Ftr>\n  <tr><td>A photo shows blank / broken<\u002Ftd><td>The image path in the editor doesn't match a file on the server. Check spelling, capitalisation and that the file was actually uploaded to the right <span class=\"path\">assets/…<\u002Fspan> folder.<\u002Ftd><\u002Ftr>\n  <tr><td>The editor won't open the content properly<\u002Ftd><td>Open <span class=\"path\">admin.html<\u002Fspan> itself through the server (or a local server), and use “Import file” to load <span class=\"path\">content.js<\u002Fspan>.<\u002Ftd><\u002Ftr>\n<\u002Ftbody><\u002Ftable>\n<div class=\"note\"><b>Preview locally before uploading:<\u002Fb> open a terminal in the website folder and run <code>python -m http.server<\u002Fcode>, then visit <code>http://localhost:8000<\u002Fcode> in your browser. Or use the “Live Server” extension in VS Code.<\u002Fdiv>\n\n<h2><span class=\"num\">08<\u002Fspan>Golden rules<\u002Fh2>\n<div class=\"card\">\n  <p class=\"big\">1. Edit content only through <span class=\"path\">admin.html<\u002Fspan>.<\u002Fp>\n  <p class=\"big\">2. Always “Import file” the current content.js before editing.<\u002Fp>\n  <p class=\"big\">3. Upload the new content.js + any images; overwrite the old ones.<\u002Fp>\n  <p class=\"big\">4. Never rename or hand-edit the .dc.html / support.js files.<\u002Fp>\n  <p class=\"big\">5. Keep a backup copy of content.js before big changes.<\u002Fp>\n<\u002Fdiv>\n\n<footer>Nayak Lab — Ion Channel &amp; Receptor Biology Lab, IIT Delhi. Keep this handbook (<span class=\"path\">HOW-TO-UPDATE.html<\u002Fspan>) in the website folder for the next person.<\u002Ffooter>\n<\u002Fdiv>\n\n\n<\u002Fbody><\u002Fhtml>"
+  </script>
+</body>
+</html>

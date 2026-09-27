@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="flat-links" content="1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Gallery — Nayak Lab · IIT Delhi</title>
+<meta name="description" content="Life in the Nayak Lab: conferences, celebrations and everyday lab life.">
+<link rel="icon" type="image/png" href="assets/logos/tkn-favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&amp;family=Geist+Mono:wght@400;500&amp;family=Newsreader:ital,opsz,wght@1,6..72,400&amp;display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#070c16;-webkit-font-smoothing:antialiased;}
+:focus-visible{outline:2px solid #f1d49a;outline-offset:3px;}
+::selection{background:#e0a53a;color:#070c16;}
+a{text-decoration:none;color:inherit;}
+a:hover{color:inherit;}
+img{max-width:100%;}
+@keyframes lbIn{from{opacity:0;}to{opacity:1;}}
+@keyframes lbPop{from{opacity:0;transform:scale(0.97);}to{opacity:1;transform:scale(1);}}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms !important;animation-duration:.01ms !important;}}
+</style>
+<script src="./content.js"></script>
+<script src="./home-fx.js"></script>
+<script src="./trace-engine.js"></script>
+<script src="./figs-gallery.js"></script>
+<script src="./flatlinks.js"></script>
+</helmet>
+<div style="font-family:'Geist',sans-serif;color:#e8ecf3;background:#070c16;min-height:100vh;overflow-x:clip;">
+  <dc-import name="SiteNav" active="gallery" hint-size="100%,64px" style="position:sticky;top:0;z-index:200;"></dc-import>
+
+  <section id="main" style="position:relative;overflow:hidden;border-bottom:1px solid rgba(255,255,255,0.07);">
+    <canvas data-fig="gallery" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
+    <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,#070c16 30%,rgba(7,12,22,0.6) 48%,rgba(7,12,22,0) 58%),linear-gradient(180deg,transparent 80%,#070c16);"></div>
+    <div style="position:absolute;right:clamp(20px,5vw,40px);bottom:16px;font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:#7d889c;pointer-events:none;">Simulated · Ca²⁺-dye fluorescence across a concentration series</div>
+    <div style="position:relative;max-width:1360px;margin:0 auto;padding:clamp(72px,10vw,136px) clamp(20px,5vw,40px) clamp(56px,7vw,88px);">
+      <div style="font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:0.2em;color:#e6b667;text-transform:uppercase;margin-bottom:22px;">Gallery</div>
+      <h1 style="font-weight:500;font-size:clamp(38px,6vw,84px);line-height:1;letter-spacing:-0.04em;margin-bottom:26px;">Life in the <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#f1d49a;letter-spacing:-0.02em;">lab</span></h1>
+      <p style="font-size:clamp(16px,1.5vw,18px);line-height:1.65;color:#aab3c3;max-width:600px;font-weight:300;">Conferences, celebrations, fieldwork and the everyday rhythm of the group — click any photo to view it full size.</p>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:0 auto;padding:clamp(40px,6vw,72px) clamp(20px,5vw,40px) 0;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:clamp(20px,3vw,32px);">
+      <span style="font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#7d889c;">{{ totalLabel }}</span>
+      <button onClick="{{ openFirst }}" style="font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#f1d49a;background:none;border:1px solid rgba(241,212,154,0.3);border-radius:999px;padding:10px 18px;min-height:44px;cursor:pointer;transition:background .2s,border-color .2s;" style-hover="background:rgba(241,212,154,0.08);border-color:rgba(241,212,154,0.6);">{{ slideLabel }}</button>
+    </div>
+    <div ref="{{ gridRef }}" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(50% - 6px,170px),1fr));grid-auto-rows:clamp(130px,15vw,210px);grid-auto-flow:dense;gap:12px;">
+      <sc-for list="{{ items }}" as="g" hint-placeholder-count="15">
+        <button onClick="{{ g.open }}" aria-label="{{ g.aria }}" data-reveal="16" data-reveal-delay="{{ g.delay }}" style="position:relative;grid-column:{{ g.col }};grid-row:{{ g.row }};border:none;padding:0;margin:0;border-radius:16px;overflow:hidden;background:#0d1422;cursor:zoom-in;display:block;width:100%;height:100%;outline-offset:3px;">
+          <img loading="lazy" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ g.src }}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.2,.7,0,1),filter .4s;filter:saturate(0.92) brightness(0.92);" style-hover="transform:scale(1.045);filter:saturate(1) brightness(1);">
+          <span style="position:absolute;inset:0;border-radius:16px;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.07);pointer-events:none;"></span>
+          <span style="position:absolute;left:12px;bottom:12px;font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:0.1em;color:#e8ecf3;background:rgba(7,12,22,0.62);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:5px 10px;border-radius:999px;pointer-events:none;">{{ g.num }}</span>
+        </button>
+      </sc-for>
+    </div>
+    <sc-if value="{{ hasMore }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:clamp(28px,4vw,44px);text-align:center;">
+        <span style="font-family:'Geist Mono',monospace;font-size:11.5px;letter-spacing:0.12em;text-transform:uppercase;color:#7d889c;">{{ moreNote }}</span>
+        <button onClick="{{ openMore }}" style="font-size:14.5px;font-weight:500;color:#070c16;background:#f1d49a;border:none;padding:14px 26px;min-height:48px;border-radius:999px;cursor:pointer;transition:transform .18s,box-shadow .18s;" style-hover="transform:translateY(-2px);box-shadow:0 0 0 6px rgba(241,212,154,0.14);">{{ allLabel }}</button>
+      </div>
+    </sc-if>
+  </section>
+
+  <div style="height:clamp(80px,10vw,128px);"></div>
+  <dc-import name="SiteFooter" hint-size="100%,340px"></dc-import>
+
+  <sc-if value="{{ lightboxOpen }}" hint-placeholder-val="{{ false }}">
+    <div id="gal-lb" role="dialog" aria-modal="true" aria-label="Photo viewer" onKeyDown="{{ trap }}" onTouchStart="{{ tStart }}" onTouchEnd="{{ tEnd }}" style="position:fixed;inset:0;z-index:1000;background:rgba(5,9,17,0.97);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:grid;grid-template-rows:auto minmax(0,1fr) auto;animation:lbIn .2s ease;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;padding:clamp(12px,2vw,20px) clamp(14px,3vw,28px);">
+        <div style="display:flex;align-items:center;gap:12px;font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#aab3c3;">
+          <span style="color:#e6b667;">Life in the lab</span>
+          <span style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.35);"></span>
+          <span aria-live="polite">{{ counter }}</span>
+        </div>
+        <button id="gal-close" onClick="{{ close }}" aria-label="Close viewer" style="width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.04);color:#fff;font-size:22px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;" style-hover="background:rgba(255,255,255,0.14);">×</button>
+      </div>
+      <div onClick="{{ close }}" style="position:relative;display:flex;align-items:center;justify-content:center;padding:0 clamp(12px,7vw,96px);min-height:0;">
+        <img key="{{ activeSrc }}" onClick="{{ stop }}" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-lb="{{ activeSrc }}" alt="{{ activeAlt }}" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 44px 88px -32px rgba(0,0,0,0.75);display:block;animation:lbPop .26s cubic-bezier(.2,.7,.2,1);cursor:default;">
+        <button onClick="{{ prevStop }}" aria-label="Previous photo" style="position:absolute;left:clamp(8px,2vw,28px);top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,255,255,0.18);background:rgba(7,12,22,0.55);color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;" style-hover="background:rgba(255,255,255,0.14);">←</button>
+        <button onClick="{{ nextStop }}" aria-label="Next photo" style="position:absolute;right:clamp(8px,2vw,28px);top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,255,255,0.18);background:rgba(7,12,22,0.55);color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;" style-hover="background:rgba(255,255,255,0.14);">→</button>
+      </div>
+      <div ref="{{ stripRef }}" style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:clamp(12px,2vw,20px) clamp(14px,3vw,28px);justify-content:safe center;">
+        <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="15">
+          <button onClick="{{ t.go }}" aria-label="{{ t.aria }}" aria-current="{{ t.current }}" style="flex:none;width:68px;height:48px;padding:0;border-radius:8px;overflow:hidden;cursor:pointer;background:#0d1422;border:2px solid {{ t.border }};opacity:{{ t.op }};transition:opacity .2s,border-color .2s;" style-hover="opacity:1;">
+            <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-lb="{{ t.src }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { active: -1, cols: 4 };
+  stripRef = React.createRef();
+  gridRef = React.createRef();
+  _measure() { const g = this.gridRef.current; if (!g) return; const c = getComputedStyle(g).gridTemplateColumns.split(' ').filter(Boolean).length || 1; if (c !== this.state.cols) this.setState({ cols: c }); }
+  _syncLb() { const d = document.getElementById('gal-lb'); if (!d) return; d.querySelectorAll('img[data-lb]').forEach(im => { const s = im.getAttribute('data-lb'); if (s && s.indexOf('{{') < 0 && im.getAttribute('src') !== s) im.setAttribute('src', s); }); }
+  _layout(n, cols) {
+    const P = [[2, 2], [1, 1], [1, 2], [1, 1], [2, 1], [1, 1], [1, 1], [1, 2], [2, 1], [1, 1]];
+    const base = Array.from({ length: n }, (_, i) => { const p = P[i % P.length]; return [Math.min(p[0], cols), p[1]]; });
+    const holes = (sp) => {
+      const occ = [], get = (r, c) => (occ[r] || [])[c];
+      for (const [w, hh] of sp) {
+        let done = false;
+        for (let r = 0; !done && r < 400; r++) for (let c = 0; !done && c + w <= cols; c++) {
+          let ok = true;
+          for (let y = 0; y < hh && ok; y++) for (let x = 0; x < w && ok; x++) if (get(r + y, c + x)) ok = false;
+          if (ok) { for (let y = 0; y < hh; y++) for (let x = 0; x < w; x++) (occ[r + y] = occ[r + y] || [])[c + x] = 1; done = true; }
+        }
+      }
+      let k = 0; for (let r = 0; r < occ.length; r++) for (let c = 0; c < cols; c++) if (!get(r, c)) k++;
+      return k;
+    };
+    for (let k = n; k >= 0; k--) for (let m = 0; m < cols; m++) {
+      const sp = base.map((p, i) => i >= k ? [1, 1] : p);
+      if (m && cols < 2) break;
+      for (let j = 0, t = n - 1; j < m && t >= k; t--) if (sp[t][0] * sp[t][1] === 1) { sp[t] = [2, 1]; j++; }
+      if (!holes(sp)) return sp;
+    }
+    return base.map(() => [1, 1]);
+  }
+  componentDidMount() {
+    const go = () => { if (!window.LAB_CONTENT) { this._t = setTimeout(go, 40); return; } this.forceUpdate(); };
+    go();
+    this._key = (e) => {
+      if (this.state.active < 0) return;
+      if (e.key === 'Escape') this._show(-1);
+      else if (e.key === 'ArrowRight') this._step(1);
+      else if (e.key === 'ArrowLeft') this._step(-1);
+    };
+    window.addEventListener('keydown', this._key);
+    this._ro = new ResizeObserver(() => this._measure());
+    const w = () => { if (this.gridRef.current) { this._ro.observe(this.gridRef.current); this._measure(); } else this._wt = setTimeout(w, 60); }; w();
+  }
+  componentDidUpdate(pp, ps) {
+    const a = this.state.active;
+    this._syncLb();
+
+    const st = this.stripRef.current;
+    if (a >= 0 && st && st.children[a] && a !== this._scrolled) { this._scrolled = a; const c = st.children[a]; st.scrollTo({ left: c.offsetLeft - st.clientWidth / 2 + c.clientWidth / 2, behavior: this._jump ? 'auto' : 'smooth' }); this._jump = false; }
+  }
+  componentWillUnmount() { clearTimeout(this._t); clearTimeout(this._wt); this._ro && this._ro.disconnect(); window.removeEventListener('keydown', this._key); document.body.style.overflow = ''; }
+  _all() { return ((window.LAB_CONTENT || {}).gallery) || []; }
+  _show(i) {
+    const all = this._all(), n = all.length;
+    if (i < 0 || !n) {
+      this.setState({ active: -1 }); document.body.style.overflow = '';
+      const f = this._from; this._from = null; if (f && f.focus) requestAnimationFrame(() => f.focus());
+      return;
+    }
+    if (this.state.active < 0) {
+      this._from = document.activeElement; this._jump = true; this._scrolled = -1;
+      const f = (n) => { const b = document.getElementById('gal-close'); if (b) { b.focus(); this._syncLb(); } else if (n < 30) requestAnimationFrame(() => f(n + 1)); };
+      requestAnimationFrame(() => f(0));
+    }
+    this.setState({ active: i }); document.body.style.overflow = 'hidden';
+    [1, -1].forEach(d => { const im = new Image(); im.src = all[(i + d + n) % n]; });
+  }
+  _step(d) { const n = this._all().length; if (n) this._show((this.state.active + d + n) % n); }
+  renderVals() {
+    const all = this._all(), total = all.length, pad = i => String(i + 1).padStart(2, '0');
+    const LIMIT = 12, shown = Math.min(total, LIMIT);
+    const sp = this._layout(shown, this.state.cols);
+    const a = this.state.active;
+    const items = all.slice(0, shown).map((src, i) => ({ src, num: pad(i), aria: 'Open photo ' + (i + 1) + ' of ' + total, col: 'span ' + sp[i][0], row: 'span ' + sp[i][1], delay: (i % 5) * 60, open: () => this._show(i) }));
+    return {
+      items, totalLabel: total > shown ? shown + ' of ' + total + ' photographs' : total + ' photographs',
+      hasMore: total > shown, moreNote: (total - shown) + ' more in the slideshow', allLabel: 'View all ' + total + ' photos →', openMore: () => this._show(shown),
+      slideLabel: 'View as slideshow →',
+      openFirst: () => this._show(0),
+      lightboxOpen: a >= 0, activeSrc: a >= 0 ? all[a] : '', activeAlt: a >= 0 ? 'Lab photo ' + (a + 1) + ' of ' + total : '',
+      counter: a >= 0 ? pad(a) + ' / ' + String(total).padStart(2, '0') : '',
+      thumbs: a >= 0 ? all.map((src, i) => ({ src: Math.abs(i - a) <= 10 ? src : '', aria: 'Show photo ' + (i + 1), current: i === a ? 'true' : 'false', border: i === a ? '#f1d49a' : 'transparent', op: i === a ? 1 : 0.5, go: (e) => { e.stopPropagation(); this._show(i); } })) : [],
+      stripRef: this.stripRef, gridRef: this.gridRef,
+      close: () => this._show(-1),
+      stop: (e) => e.stopPropagation(),
+      prevStop: (e) => { e.stopPropagation(); this._step(-1); },
+      nextStop: (e) => { e.stopPropagation(); this._step(1); },
+      tStart: (e) => { const t = e.touches[0]; this._tx = t.clientX; this._ty = t.clientY; },
+      tEnd: (e) => { const t = e.changedTouches[0], dx = t.clientX - (this._tx || 0), dy = t.clientY - (this._ty || 0); if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) this._step(dx < 0 ? 1 : -1); },
+      trap: (e) => {
+        if (e.key !== 'Tab') return;
+        const d = document.getElementById('gal-lb'); if (!d) return;
+        const f = [...d.querySelectorAll('button')]; if (!f.length) return;
+        if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+        else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>
